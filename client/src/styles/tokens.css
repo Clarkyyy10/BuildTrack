@@ -1,0 +1,104 @@
+/* BuildTrack design tokens — professional, calm, engineering-grade.
+   Neutral slate surfaces, a single disciplined indigo accent, and a
+   technical typeface (IBM Plex) for a serious, non-generic feel. */
+:root {
+  /* Neutral surfaces */
+  --bg: #f4f5f7;
+  --surface: #ffffff;
+  --surface-2: #f9fafb;
+  --border: #eaecf0;
+  --border-strong: #d0d5dd;
+
+  /* Text (Untitled-UI-style ink scale) */
+  --text: #101828;
+  --text-secondary: #475467;
+  --text-muted: #98a2b3;
+
+  /* Single disciplined accent (indigo) */
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --accent-soft: #eef2ff;
+  --accent-border: #c7d0fe;
+
+  /* Semantic status */
+  --success: #067647;
+  --success-soft: #ecfdf3;
+  --warning: #b54708;
+  --warning-soft: #fffaeb;
+  --error: #b42318;
+  --error-soft: #fef3f2;
+  --info: #175cd3;
+  --info-soft: #eff8ff;
+
+  /* Typography */
+  --font: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --font-scale: 1;
+
+  /* Spacing scale */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+
+  /* Radii + shadow (tighter, more corporate) */
+  --radius-sm: 8px;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.05);
+  --shadow: 0 8px 24px -6px rgba(16, 24, 40, 0.12), 0 2px 6px -2px rgba(16, 24, 40, 0.06);
+
+  --sidebar-w: 256px;
+}
+
+/* Dark theme — deep slate, not black */
+:root[data-theme='dark'] {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface-2: #1c222b;
+  --border: #262d38;
+  --border-strong: #38414f;
+  --text: #e6e9ef;
+  --text-secondary: #9aa4b2;
+  --text-muted: #6b7482;
+  --accent: #7c74ff;
+  --accent-hover: #9089ff;
+  --accent-soft: #1e2140;
+  --accent-border: #2f3568;
+  --success-soft: #0d2a1e;
+  --warning-soft: #2c2011;
+  --error-soft: #2e1615;
+  --info-soft: #10233f;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.6);
+}
+
+/* High contrast */
+:root[data-contrast='high'] {
+  --border: #000000;
+  --border-strong: #000000;
+  --text-secondary: #1d2939;
+  --text-muted: #344054;
+}
+:root[data-contrast='high'][data-theme='dark'] {
+  --border: #ffffff;
+  --border-strong: #ffffff;
+  --text-secondary: #d8dee6;
+  --text-muted: #b6bfca;
+}
+
+/* Compact density */
+:root[data-density='compact'] {
+  --sp-4: 12px;
+  --sp-5: 18px;
+  --sp-6: 24px;
+}
+
+/* Reduced motion */
+:root[data-motion='reduced'] * {
+  animation: none !important;
+  transition: none !important;
+}

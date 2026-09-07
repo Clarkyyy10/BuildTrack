@@ -1,0 +1,53 @@
+/* Print styles — hide app chrome, format the report for paper / PDF. */
+@media print {
+  /* Hide navigation and any element explicitly marked no-print */
+  [data-sidebar],
+  [data-mobilebar],
+  [data-backdrop],
+  .no-print {
+    display: none !important;
+  }
+
+  [data-main] {
+    padding: 0 !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  .route-fade,
+  .bt-card,
+  .bt-stagger {
+    animation: none !important;
+  }
+
+  .print-doc .bt-card,
+  .print-doc .card {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+    break-inside: avoid;
+  }
+
+  .print-section {
+    break-inside: avoid;
+  }
+
+  a { color: #000 !important; text-decoration: none !important; }
+
+  table { font-size: 11px; }
+  th { color: #333 !important; }
+
+  @page {
+    margin: 16mm;
+  }
+}
+
+/* On-screen: keep the printable document readable and centered */
+.print-doc {
+  max-width: 900px;
+  margin: 0 auto;
+}

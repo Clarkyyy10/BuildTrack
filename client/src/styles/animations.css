@@ -1,0 +1,123 @@
+/* BuildTrack motion — subtle, calm, purposeful (DESIGN.md).
+   All of this is disabled automatically when the user turns on
+   "Reduced motion" (see [data-motion='reduced'] rule in tokens.css). */
+
+@keyframes bt-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes bt-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bt-scale-in {
+  from { opacity: 0; transform: translateY(6px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes bt-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes bt-shimmer {
+  from { background-position: -200% 0; }
+  to { background-position: 200% 0; }
+}
+
+/* Per-navigation content fade (keyed on route in AppShell) */
+.route-fade {
+  animation: bt-fade-up 0.28s ease both;
+}
+
+/* Cards: gentle entrance + interactive hover lift */
+.bt-card {
+  animation: bt-fade-up 0.32s ease both;
+  transition: box-shadow 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+}
+.bt-card.is-interactive {
+  cursor: pointer;
+}
+.bt-card.is-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+  border-color: var(--border-strong);
+}
+
+/* Buttons: hover lift + press feedback */
+.bt-btn {
+  transition: filter 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease;
+}
+.bt-btn:hover:not(:disabled) {
+  filter: brightness(1.04);
+  transform: translateY(-1px);
+}
+.bt-btn:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Modal entrance */
+.bt-modal-backdrop { animation: bt-fade-in 0.18s ease both; }
+.bt-modal-panel { animation: bt-scale-in 0.22s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+/* Sidebar nav + tree rows + generic interactive rows */
+.bt-nav-link { transition: background 0.15s ease, color 0.15s ease, transform 0.12s ease; }
+.bt-nav-link:hover { transform: translateX(2px); }
+
+.bt-row { transition: background 0.14s ease, transform 0.12s ease; }
+.bt-row:hover { background: var(--surface-2); }
+
+/* Progress bar fill glide */
+.bt-progress-fill { transition: width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
+
+/* Tab underline / color transition */
+.bt-tab { transition: color 0.15s ease, border-color 0.15s ease; }
+
+/* Staggered list entrance — set --i on each item */
+.bt-stagger {
+  animation: bt-fade-up 0.34s ease both;
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+
+/* Animated spinner ring */
+.bt-spinner-ring {
+  width: 22px;
+  height: 22px;
+  border: 2.5px solid var(--border-strong);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: bt-spin 0.7s linear infinite;
+}
+
+/* Loading skeleton shimmer */
+.bt-skeleton {
+  background: linear-gradient(90deg, var(--surface-2) 25%, var(--border) 37%, var(--surface-2) 63%);
+  background-size: 200% 100%;
+  animation: bt-shimmer 1.3s ease-in-out infinite;
+  border-radius: var(--radius-sm);
+}
+
+/* Status dot subtle pulse for active/in-progress */
+.bt-pulse { animation: bt-fade-in 0.3s ease both; }
+
+/* Donut ring sweep on mount */
+@keyframes bt-ring-in {
+  from { opacity: 0; transform: rotate(-90deg) scale(0.9); }
+  to { opacity: 1; transform: rotate(0) scale(1); }
+}
+.bt-ring { animation: bt-ring-in 0.5s ease both; }
+
+/* Home hero: gentle logo float + soft glow pulse */
+@keyframes bt-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes bt-glow {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 0.9; }
+}
+.bt-float { animation: bt-float 5s ease-in-out infinite; }
+.bt-glow { animation: bt-glow 5s ease-in-out infinite; }
+.bt-hero-tile { transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease; }
+.bt-hero-tile:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--accent-border); }
