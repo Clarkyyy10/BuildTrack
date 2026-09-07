@@ -33,8 +33,8 @@ export function Overview({ ctx }: { ctx: ProjectContext }) {
                 style={{ padding: '8px 10px', borderRadius: 8, cursor: 'pointer', gap: 12 }}
                 onClick={() => navigate(`c/${c.id}`)}
               >
-                <span style={{ fontSize: '0.9rem' }}>{c.name}</span>
-                <div style={{ width: 130 }}><ProgressBar value={c.progress} /></div>
+                <span style={{ fontSize: '0.9rem', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{c.name}</span>
+                <div style={{ width: 130, flexShrink: 0 }}><ProgressBar value={c.progress} /></div>
               </div>
             ))}
             {(data?.components ?? []).length === 0 && <p className="muted" style={{ fontSize: '0.9rem' }}>No components yet. Open the Breakdown tab to add some.</p>}

@@ -10,6 +10,18 @@ html {
   font-size: calc(16px * var(--font-scale));
 }
 
+/* Never allow the page itself to scroll sideways on small devices.
+   Individual wide elements (tables, etc.) opt into their own scroll. */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Media should always scale down to its container, never force overflow */
+img, svg, video, canvas {
+  max-width: 100%;
+}
+
 body {
   margin: 0;
   font-family: var(--font);
@@ -86,10 +98,13 @@ label {
 .muted { color: var(--text-muted); }
 .secondary { color: var(--text-secondary); }
 
-.row { display: flex; align-items: center; gap: var(--sp-3); }
-.row-between { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); }
-.stack { display: flex; flex-direction: column; gap: var(--sp-3); }
+.row { display: flex; align-items: center; gap: var(--sp-3); min-width: 0; }
+.row-between { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); min-width: 0; }
+.stack { display: flex; flex-direction: column; gap: var(--sp-3); min-width: 0; }
 .wrap { flex-wrap: wrap; }
+
+/* Long unbreakable strings (IDs, emails, URLs) shouldn't blow out layout */
+h1, h2, h3, h4, p, dd, dt, td, th, span, a { overflow-wrap: break-word; }
 
 .grid { display: grid; gap: var(--sp-4); }
 .grid-2 { grid-template-columns: repeat(2, 1fr); }
@@ -119,6 +134,11 @@ th {
 }
 tr:last-child td { border-bottom: none; }
 
+/* --- Responsive polish for tablets --- */
+@media (max-width: 900px) {
+  h1 { font-size: 1.5rem; }
+}
+
 /* --- Responsive polish for small screens --- */
 @media (max-width: 720px) {
   /* Wide tables scroll horizontally instead of overflowing the card */
@@ -129,14 +149,20 @@ tr:last-child td { border-bottom: none; }
     -webkit-overflow-scrolling: touch;
   }
   th, td { padding: 10px 12px; }
-  h1 { font-size: 1.4rem; }
-  h2 { font-size: 1.15rem; }
+  h1 { font-size: 1.35rem; }
+  h2 { font-size: 1.12rem; }
+  h3 { font-size: 0.98rem; }
   /* Modal padding a touch tighter */
   .field { margin-bottom: 12px; }
+  /* Stat tiles and big numbers scale down so they never clip */
+  .stat-value { font-size: 1.15rem; }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 480px) {
   th, td { font-size: 0.86rem; }
-  /* Stack any row-between groups (e.g., card headers with actions) */
+  /* Stack any row-between groups (e.g., card headers with actions) so
+     the trailing action drops below the title instead of overflowing. */
   .row-between { flex-wrap: wrap; }
+  /* Full-width primary actions read better on phones */
+  .row-between > .bt-btn { flex: 1 1 auto; }
 }

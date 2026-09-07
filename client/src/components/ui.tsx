@@ -134,7 +134,7 @@ export function Stat({ label, value, sub }: { label: string; value: ReactNode; s
   return (
     <Card padding="var(--sp-4)">
       <div className="muted" style={{ fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 6 }}>{label}</div>
-      <div style={{ fontSize: '1.3rem', fontWeight: 600 }}>{value}</div>
+      <div className="stat-value" style={{ fontSize: '1.3rem', fontWeight: 600 }}>{value}</div>
       {sub && <div className="muted" style={{ fontSize: '0.82rem', marginTop: 4 }}>{sub}</div>}
     </Card>
   );

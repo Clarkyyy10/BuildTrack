@@ -56,9 +56,9 @@ function ReportBody({ kind, data }: { kind: string; data: Record<string, unknown
     const components = (data.components as Array<{ id: string; name: string; type: string; status: string; progress: number }>) ?? [];
     return (
       <div>
-        <div className="row-between" style={{ marginBottom: 16 }}>
+        <div className="row-between wrap" style={{ marginBottom: 16, gap: 12 }}>
           <h3>Overall Progress</h3>
-          <div style={{ width: 200 }}><ProgressBar value={Number(data.overall ?? 0)} /></div>
+          <div style={{ flex: '1 1 200px', maxWidth: 260 }}><ProgressBar value={Number(data.overall ?? 0)} /></div>
         </div>
         <table>
           <thead><tr><th>Component</th><th>Type</th><th>Status</th><th>Progress</th></tr></thead>

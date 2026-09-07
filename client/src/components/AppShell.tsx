@@ -88,7 +88,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       {/* Backdrop for mobile drawer */}
       {open && <div onClick={() => setOpen(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', zIndex: 15 }} data-backdrop />}
 
-      <main style={{ flex: 1, padding: 'var(--sp-6)', maxWidth: 1200, margin: '0 auto', width: '100%' }} data-main>
+      <main style={{ flex: 1, minWidth: 0, padding: 'var(--sp-6)', maxWidth: 1200, margin: '0 auto', width: '100%' }} data-main>
         <div key={routeKey} className="route-fade">
           {children}
         </div>
