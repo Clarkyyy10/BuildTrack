@@ -112,7 +112,11 @@ function ShellResponsiveStyles() {
           box-shadow: var(--shadow);
         }
         [data-sidebar][data-open="true"] { transform: translateX(0); }
-        [data-main] { padding-top: 72px !important; }
+        [data-main] {
+          padding-top: 72px !important;
+          padding-left: 16px !important;
+          padding-right: 16px !important;
+        }
       }
     `}</style>
   );

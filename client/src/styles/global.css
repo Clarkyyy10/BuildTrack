@@ -118,3 +118,25 @@ th {
   font-weight: 600;
 }
 tr:last-child td { border-bottom: none; }
+
+/* --- Responsive polish for small screens --- */
+@media (max-width: 720px) {
+  /* Wide tables scroll horizontally instead of overflowing the card */
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+  th, td { padding: 10px 12px; }
+  h1 { font-size: 1.4rem; }
+  h2 { font-size: 1.15rem; }
+  /* Modal padding a touch tighter */
+  .field { margin-bottom: 12px; }
+}
+
+@media (max-width: 420px) {
+  th, td { font-size: 0.86rem; }
+  /* Stack any row-between groups (e.g., card headers with actions) */
+  .row-between { flex-wrap: wrap; }
+}
