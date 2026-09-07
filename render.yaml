@@ -1,23 +1,22 @@
-# Render Blueprint for the BuildTrack API (Express + Supabase Postgres).
-# Deploy: push this repo, then in Render -> New -> Blueprint, pick this repo.
+# Render Blueprint — single service that serves BOTH the API and the React app.
+# Deploy: Render -> New -> Blueprint -> pick this repo. Set the SUPABASE_* vars.
 services:
   - type: web
-    name: buildtrack-api
+    name: buildtrack
     runtime: node
     plan: free
     rootDir: .
-    buildCommand: npm install && npm run build --workspace server
+    # --include=dev so build tools (tsc, vite) are available under NODE_ENV=production
+    buildCommand: npm install --include=dev && npm run build
     startCommand: npm run start --workspace server
     healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production
       - key: JWT_SECRET
-        generateValue: true          # Render generates a strong secret
+        generateValue: true
       - key: SESSION_TTL_HOURS
         value: "168"
-      - key: CLIENT_ORIGIN
-        sync: false                  # set to your Vercel URL, e.g. https://buildtrack.vercel.app
       - key: SUPABASE_DB_HOST
         sync: false                  # e.g. aws-0-ap-southeast-1.pooler.supabase.com
       - key: SUPABASE_DB_PORT
