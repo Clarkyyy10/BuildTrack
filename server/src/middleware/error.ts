@@ -16,9 +16,8 @@ export function errorHandler(
     });
   }
 
-  if (!config.isProd) {
-    console.error(err);
-  }
+  // Always log server-side so hosted platforms (Render) capture the cause.
+  console.error(err);
 
   return res.status(500).json({
     error: {
