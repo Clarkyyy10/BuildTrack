@@ -106,12 +106,17 @@ function ShellResponsiveStyles() {
       [data-mobilebar] { display: none; }
       @media (max-width: 860px) {
         [data-mobilebar] { display: flex; }
+        /* !important is required: the sidebar sets position/top/height inline,
+           and inline styles beat stylesheet rules. Without it the sidebar stays
+           position:sticky, keeps reserving its 256px column, and leaves an empty
+           gutter on mobile while content is squeezed to one side. */
         [data-sidebar] {
-          position: fixed; z-index: 20; left: 0; top: 0;
-          transform: translateX(-100%); transition: transform .2s ease;
+          position: fixed !important; z-index: 20; left: 0 !important; top: 0 !important;
+          height: 100vh !important; width: var(--sidebar-w) !important; max-width: 84vw;
+          transform: translateX(-100%) !important; transition: transform .2s ease;
           box-shadow: var(--shadow);
         }
-        [data-sidebar][data-open="true"] { transform: translateX(0); }
+        [data-sidebar][data-open="true"] { transform: translateX(0) !important; }
         [data-main] {
           padding-top: 72px !important;
           padding-left: 16px !important;
