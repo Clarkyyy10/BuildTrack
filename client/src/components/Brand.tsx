@@ -22,7 +22,7 @@ export function BrandMark({ size = 32, radius = 9 }: { size?: number; radius?: n
     );
   }
   return (
-    <div style={{ width: size, height: size, borderRadius: radius, background: 'var(--accent)', color: '#fff', display: 'grid', placeItems: 'center', fontWeight: 700, fontSize: size * 0.45 }}>
+    <div style={{ width: size, height: size, borderRadius: radius, background: 'var(--accent)', color: 'var(--on-accent)', display: 'grid', placeItems: 'center', fontWeight: 700, fontSize: size * 0.45 }}>
       B
     </div>
   );

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApi } from '../../lib/useApi.js';
-import { Button, Card, Spinner, ProgressBar } from '../../components/ui.js';
+import { Button, Card, RowsSkeleton, ProgressBar } from '../../components/ui.js';
 import { IconPrinter } from '../../components/icons.js';
 import { money, titleCase } from '../../lib/format.js';
 import type { ProjectContext } from '../ProjectWorkspace.js';
@@ -44,7 +44,7 @@ export function Reports({ ctx }: { ctx: ProjectContext }) {
       </div>
 
       <Card>
-        {loading && <Spinner />}
+        {loading && <RowsSkeleton />}
         {!loading && data && <ReportBody kind={kind} data={data} />}
       </Card>
     </div>

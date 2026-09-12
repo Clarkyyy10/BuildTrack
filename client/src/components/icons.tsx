@@ -58,6 +58,9 @@ export const IconMenu = (p: IconProps) => (
 export const IconSearch = (p: IconProps) => (
   <Base {...p}><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></Base>
 );
+export const IconArrowLeft = (p: IconProps) => (
+  <Base {...p}><path d="M19 12H5" /><path d="m12 19-7-7 7-7" /></Base>
+);
 export const IconCamera = (p: IconProps) => (
   <Base {...p}><path d="M4 8a2 2 0 0 1 2-2h1.5l1-1.5h5l1 1.5H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z" /><circle cx="12" cy="12.5" r="3.2" /></Base>
 );

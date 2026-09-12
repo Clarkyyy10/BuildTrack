@@ -31,6 +31,25 @@ body {
   line-height: 1.5;
 }
 
+/* --- Browser surfaces themed from the palette (not left as UA defaults) --- */
+::selection {
+  background: var(--accent-soft);
+  color: var(--accent-hover);
+}
+:root { accent-color: var(--accent); }   /* native checkbox/radio/range/progress */
+input, textarea { caret-color: var(--accent); }
+
+/* Scrollbars: quiet, palette-tinted, and consistent across engines */
+* { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border: 2px solid var(--bg);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
 h1, h2, h3, h4 {
   margin: 0;
   font-weight: 600;
@@ -78,6 +97,9 @@ input, select, textarea {
   padding: 10px 12px;
   width: 100%;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+input:hover:not(:focus), select:hover:not(:focus), textarea:hover:not(:focus) {
+  border-color: var(--text-muted);
 }
 input:focus, select:focus, textarea:focus {
   outline: none;
@@ -131,8 +153,37 @@ th {
   letter-spacing: 0.04em;
   color: var(--text-muted);
   font-weight: 600;
+  background: var(--surface-2);
 }
+/* Header stays put when a wide table scrolls inside its card */
+thead th { position: sticky; top: 0; z-index: 1; }
+/* Rows respond to the pointer so dense tables are easier to track */
+tbody tr { transition: background 0.12s ease; }
+tbody tr:hover td { background: var(--surface-2); }
 tr:last-child td { border-bottom: none; }
+
+/* Compact table density (Settings → Interface → Table density).
+   Independent of overall UI density; only tightens tabular rows. */
+:root[data-table-density='compact'] th,
+:root[data-table-density='compact'] td {
+  padding: 6px 10px;
+  font-size: 0.86rem;
+}
+
+/* Screen-reader-only helper text. `.sr-hint` is present in the DOM but only
+   exposed to assistive tech when the user enables "Screen-reader hints"
+   (Settings → Accessibility); otherwise it's removed from the a11y tree. */
+.sr-only,
+:root[data-sr-hints='on'] .sr-hint {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+:root:not([data-sr-hints='on']) .sr-hint { display: none; }
 
 /* --- Responsive polish for tablets --- */
 @media (max-width: 900px) {

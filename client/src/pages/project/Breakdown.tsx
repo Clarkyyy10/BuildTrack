@@ -16,6 +16,18 @@ export function Breakdown({ ctx }: { ctx: ProjectContext }) {
   const [selected, setSelected] = useState<ComponentNode | null>(null);
   const [showAdd, setShowAdd] = useState<{ parentId: string | null } | null>(null);
   const [busy, setBusy] = useState(false);
+  const [progEditing, setProgEditing] = useState(false);
+  const [progValue, setProgValue] = useState(0);
+  const canProgress = ['project_manager', 'site_engineer', 'architect', 'contractor'].includes(ctx.project.role ?? '');
+
+  async function saveProgress(node: ComponentNode) {
+    await api.patch(`/components/${node.id}/progress`, { progress: progValue });
+    setProgEditing(false);
+    // Reflect immediately in the panel, then refresh the tree + project header.
+    setSelected({ ...node, progress: progValue, directProgress: progValue });
+    reload();
+    ctx.reloadProject();
+  }
 
   async function addComponent(name: string, type: string, parentId: string | null) {
     setBusy(true);
@@ -63,7 +75,7 @@ export function Breakdown({ ctx }: { ctx: ProjectContext }) {
             action={ctx.canManage ? <Button size="sm" onClick={() => setShowAdd({ parentId: null })}>+ Add first component</Button> : undefined}
           />
         ) : (
-          <Tree nodes={components} selectedId={selected?.id ?? null} onSelect={setSelected} />
+          <Tree nodes={components} selectedId={selected?.id ?? null} onSelect={(n) => { setSelected(n); setProgEditing(false); }} />
         )}
       </Card>
 
@@ -74,7 +86,7 @@ export function Breakdown({ ctx }: { ctx: ProjectContext }) {
               <h3>{selected.name}</h3>
               <span className="muted" style={{ fontSize: '0.8rem' }}>{selected.type}</span>
             </div>
-            <p className="muted" style={{ fontSize: '0.85rem', marginBottom: 16 }}>Progress {selected.progress}% · {selected.children.length} sub-components</p>
+            <p className="muted" style={{ fontSize: '0.85rem', marginBottom: 16 }}>Progress {selected.progress}% · {selected.children.length} sub-component{selected.children.length === 1 ? '' : 's'}</p>
             <div className="row wrap" style={{ gap: 8 }}>
               <Button size="sm" onClick={() => navigate(`../c/${selected.id}`)}>Open details →</Button>
               {ctx.canManage && <>
@@ -83,6 +95,27 @@ export function Breakdown({ ctx }: { ctx: ProjectContext }) {
                 <Button size="sm" variant="danger" onClick={() => remove(selected)}>Delete</Button>
               </>}
             </div>
+
+            {/* Manual progress: only leaf components are directly editable; parents roll up. */}
+            {canProgress && selected.children.length === 0 && (
+              <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--border)' }}>
+                {progEditing ? (
+                  <div className="row wrap" style={{ gap: 8 }}>
+                    <input type="range" min={0} max={100} value={progValue} onChange={(e) => setProgValue(Number(e.target.value))} style={{ padding: 0, flex: '1 1 140px' }} aria-label="Progress percent" />
+                    <span className="stat-value" style={{ minWidth: 44, fontWeight: 600 }}>{progValue}%</span>
+                    <Button size="sm" onClick={() => saveProgress(selected)}>Save</Button>
+                    <Button size="sm" variant="ghost" onClick={() => setProgEditing(false)}>Cancel</Button>
+                  </div>
+                ) : (
+                  <Button size="sm" variant="secondary" onClick={() => { setProgValue(selected.directProgress); setProgEditing(true); }}>Update progress</Button>
+                )}
+              </div>
+            )}
+            {canProgress && selected.children.length > 0 && (
+              <p className="muted" style={{ fontSize: '0.82rem', marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--border)' }}>
+                Progress here rolls up from sub-components. Select a leaf component to set its percentage.
+              </p>
+            )}
           </div>
         ) : (
           <EmptyState title="Select a component" hint="Choose a node in the breakdown to see actions and open its details." />

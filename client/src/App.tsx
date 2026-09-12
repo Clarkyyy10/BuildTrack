@@ -11,7 +11,6 @@ import { NotificationsPage } from './pages/Notifications.js';
 import { InvitationsPage } from './pages/Invitations.js';
 import { ProfilePage } from './pages/Profile.js';
 import { SettingsPage } from './pages/Settings.js';
-import { HistoryPage } from './pages/History.js';
 import { PrintReport } from './pages/PrintReport.js';
 
 export function App() {
@@ -40,7 +39,6 @@ export function App() {
         <Route path="/projects/:projectId/*" element={<ProjectWorkspace />} />
         <Route path="/notifications" element={<NotificationsPage />} />
         <Route path="/invitations" element={<InvitationsPage />} />
-        <Route path="/history" element={<HistoryPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/login" element={<Navigate to="/" replace />} />

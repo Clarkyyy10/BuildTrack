@@ -32,7 +32,6 @@ export function ScheduleTab({ componentId, canManage }: { componentId: string; c
   const dates = acts.flatMap((a) => [a.startDate, a.endDate]).filter(Boolean).map((d) => new Date(d as string).getTime());
   const min = dates.length ? Math.min(...dates) : 0;
   const max = dates.length ? Math.max(...dates) : 0;
-  const colors = ['#2f6df6', '#1f9d63', '#c9880a', '#8b5cf6', '#0ea5e9', '#e0518d', '#14b8a6'];
 
   return (
     <Card>
@@ -60,7 +59,7 @@ export function ScheduleTab({ componentId, canManage }: { componentId: string; c
                 <div key={a.id} className="row" style={{ gap: 10 }}>
                   <div style={{ width: 130, fontSize: '0.85rem', flexShrink: 0 }}>{a.name}</div>
                   <div style={{ flex: 1, position: 'relative', height: 18, background: 'var(--surface-2)', borderRadius: 6 }}>
-                    <div title={`${shortDate(a.startDate)} – ${shortDate(a.endDate)}`} style={{ position: 'absolute', left: pos.left, width: pos.width, top: 0, bottom: 0, background: colors[i % colors.length], borderRadius: 6, opacity: a.status === 'completed' ? 0.55 : 1 }} />
+                    <div title={`${shortDate(a.startDate)} – ${shortDate(a.endDate)}`} style={{ position: 'absolute', left: pos.left, width: pos.width, top: 0, bottom: 0, background: 'var(--accent)', borderRadius: 6, opacity: a.status === 'completed' ? 0.45 : 0.7 + (i % 4) * 0.1 }} />
                   </div>
                 </div>
               );

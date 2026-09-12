@@ -1,6 +1,6 @@
 import { useApi } from '../lib/useApi.js';
 import { api } from '../lib/api.js';
-import { Button, Card, EmptyState, ErrorState, Spinner, StatusPill } from '../components/ui.js';
+import { Button, Card, EmptyState, ErrorState, ListSkeleton, StatusPill } from '../components/ui.js';
 import { roleLabel, dateTime } from '../lib/format.js';
 import type { Invitation } from '../lib/types.js';
 
@@ -15,7 +15,7 @@ export function InvitationsPage() {
   return (
     <div>
       <h1 style={{ marginBottom: 20 }}>Invitations</h1>
-      {loading && <Spinner />}
+      {loading && <ListSkeleton rows={3} />}
       {error && <ErrorState message={error} onRetry={reload} />}
       {data && data.invitations.length === 0 && (
         <Card><EmptyState title="No invitations" hint="When someone invites you to a project, it will appear here." /></Card>

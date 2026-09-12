@@ -1,6 +1,6 @@
 import { NavLink, Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import { useApi } from '../lib/useApi.js';
-import { Button, Card, ErrorState, ProgressBar, Spinner, StatusPill, Stat } from '../components/ui.js';
+import { BackLink, Button, Card, ErrorState, ProgressBar, Spinner, StatusPill, Stat } from '../components/ui.js';
 import { IconPrinter } from '../components/icons.js';
 import { money, titleCase } from '../lib/format.js';
 import type { Project } from '../lib/types.js';
@@ -39,7 +39,7 @@ export function ProjectWorkspace() {
     <div>
       {/* Header */}
       <div style={{ marginBottom: 20 }}>
-        <NavLink to="/projects" className="muted" style={{ fontSize: '0.85rem' }}>← Projects</NavLink>
+        <BackLink label="Projects" onClick={() => navigate('/projects')} />
         <div className="row-between wrap" style={{ gap: 12, marginTop: 8 }}>
           <div className="row" style={{ gap: 12 }}>
             <h1>{p.name}</h1>
@@ -69,6 +69,7 @@ export function ProjectWorkspace() {
             key={t.to}
             to={t.to}
             end={t.end}
+            className="bt-tab"
             style={({ isActive }) => ({
               padding: '10px 14px', fontSize: '0.9rem', fontWeight: 500, whiteSpace: 'nowrap',
               color: isActive ? 'var(--accent)' : 'var(--text-secondary)',

@@ -4,7 +4,8 @@ import { useAuth } from '../lib/auth.js';
 import { Button } from '../components/ui.js';
 import { BrandMark } from '../components/Brand.js';
 import { NewProjectModal } from '../components/NewProjectModal.js';
-import { IconFolder, IconMail, IconClock, IconPlus } from '../components/icons.js';
+import { projectLandingPath } from './Projects.js';
+import { IconFolder, IconMail, IconPlus } from '../components/icons.js';
 
 function greeting(): string {
   const h = new Date().getHours();
@@ -14,7 +15,7 @@ function greeting(): string {
 }
 
 export function HomePage() {
-  const { user } = useAuth();
+  const { user, settings } = useAuth();
   const navigate = useNavigate();
   const [showNew, setShowNew] = useState(false);
   const firstName = user?.displayName.split(' ')[0] ?? '';
@@ -55,18 +56,18 @@ export function HomePage() {
 
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '4px 12px', borderRadius: 999, background: 'var(--surface)', border: '1px solid var(--border)', fontSize: '0.72rem', fontWeight: 600, letterSpacing: '0.06em', color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: 18 }}>
           <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--success)' }} />
-          Projects First · Details When Needed
+          Projects first. Details when needed.
         </div>
 
         <h1 style={{ fontSize: '2.4rem', lineHeight: 1.1, marginBottom: 14 }}>
           {greeting()}, {firstName}.
         </h1>
 
-        <p style={{ fontSize: '1.15rem', fontWeight: 600, marginBottom: 10, background: 'linear-gradient(90deg, var(--accent), var(--info))', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
+        <p style={{ fontSize: '1.15rem', fontWeight: 600, marginBottom: 10, color: 'var(--accent)' }}>
           Track Every Part. Build With Confidence.
         </p>
         <p className="secondary" style={{ fontSize: '1rem', marginBottom: 30, maxWidth: 460, marginInline: 'auto' }}>
-          Break your build into components, then follow budget, materials, schedule, personnel, and progress — all in one place.
+          Break your build into components, then track budget, materials, schedule, personnel, and progress, all in one place.
         </p>
 
         <div className="row" style={{ gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 40 }}>
@@ -75,15 +76,14 @@ export function HomePage() {
         </div>
 
         {/* Quick-access tiles (navigation, not a dashboard) */}
-        <div className="grid grid-3" style={{ gap: 12, textAlign: 'left' }}>
+        <div className="grid grid-2" style={{ gap: 12, textAlign: 'left' }}>
           <HomeTile icon={<IconFolder size={20} />} title="Projects" desc="View & open your builds" onClick={() => navigate('/projects')} />
           <HomeTile icon={<IconMail size={20} />} title="Invitations" desc="Join projects you're invited to" onClick={() => navigate('/invitations')} />
-          <HomeTile icon={<IconClock size={20} />} title="History" desc="Recent activity across projects" onClick={() => navigate('/history')} />
         </div>
       </div>
 
       {showNew && (
-        <NewProjectModal onClose={() => setShowNew(false)} onCreated={(id) => { setShowNew(false); navigate(`/projects/${id}`); }} />
+        <NewProjectModal onClose={() => setShowNew(false)} onCreated={(id) => { setShowNew(false); navigate(projectLandingPath(id, settings?.default_project_page)); }} />
       )}
     </div>
   );

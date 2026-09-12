@@ -17,6 +17,7 @@ settingsRouter.get('/', requireAuth, ah(async (req, res) => {
 
 const settingsSchema = z.object({
   theme: z.enum(['light', 'dark', 'system']).optional(),
+  dark_theme: z.enum(['warm', 'neutral', 'slate', 'midnight', 'black']).optional(),
   accent: z.string().trim().max(40).optional(),
   font: z.string().trim().max(60).optional(),
   density: z.enum(['comfortable', 'compact']).optional(),

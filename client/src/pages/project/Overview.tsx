@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useApi } from '../../lib/useApi.js';
-import { Card, ProgressBar, Spinner, StatusPill } from '../../components/ui.js';
+import { Card, ProgressBar, RowsSkeleton, StatusPill } from '../../components/ui.js';
 import type { ComponentNode } from '../../lib/types.js';
 import type { ProjectContext } from '../ProjectWorkspace.js';
 
@@ -23,7 +23,7 @@ export function Overview({ ctx }: { ctx: ProjectContext }) {
 
       <Card>
         <h3 style={{ marginBottom: 12 }}>Project Breakdown</h3>
-        {loading && <Spinner />}
+        {loading && <RowsSkeleton rows={4} />}
         {!loading && (
           <div className="stack" style={{ gap: 6 }}>
             {(data?.components ?? []).map((c) => (

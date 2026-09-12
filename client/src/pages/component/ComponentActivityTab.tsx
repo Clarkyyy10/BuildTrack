@@ -1,5 +1,5 @@
 import { useApi } from '../../lib/useApi.js';
-import { Card, ErrorState, Spinner } from '../../components/ui.js';
+import { Card, ErrorState, RowsSkeleton } from '../../components/ui.js';
 import { ActivityFeed } from '../../components/ActivityFeed.js';
 import type { ActivityEntry } from '../../lib/types.js';
 
@@ -12,7 +12,7 @@ export function ComponentActivityTab({ projectId }: { projectId: string }) {
   return (
     <Card>
       <h3 style={{ marginBottom: 12 }}>Activity Log</h3>
-      {loading && <Spinner />}
+      {loading && <RowsSkeleton />}
       {error && <ErrorState message={error} onRetry={reload} />}
       {data && <ActivityFeed entries={data.activity} />}
     </Card>

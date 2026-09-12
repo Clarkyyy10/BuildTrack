@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useApi } from '../lib/useApi.js';
-import { Button, ErrorState, ProgressBar, Spinner, StatusPill } from '../components/ui.js';
+import { BackLink, Button, ErrorState, ProgressBar, Spinner, StatusPill } from '../components/ui.js';
 import { IconPrinter } from '../components/icons.js';
 import { BrandMark } from '../components/Brand.js';
 import { money, shortDate, titleCase, dateTime } from '../lib/format.js';
@@ -30,7 +30,7 @@ export function PrintReport() {
     <div className="print-doc">
       {/* Toolbar — hidden when printing */}
       <div className="no-print row-between" style={{ marginBottom: 20 }}>
-        <button onClick={() => navigate(`/projects/${projectId}`)} className="muted" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.9rem' }}>← Back to project</button>
+        <BackLink label="Back to project" onClick={() => navigate(`/projects/${projectId}`)} />
         <Button onClick={() => window.print()}><IconPrinter size={16} />Print / Save as PDF</Button>
       </div>
 

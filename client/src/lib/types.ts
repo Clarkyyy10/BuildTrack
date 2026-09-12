@@ -9,6 +9,7 @@ export interface User {
 export interface Settings {
   user_id: string;
   theme: string;
+  dark_theme: string;
   accent: string;
   font: string;
   density: string;
@@ -74,6 +75,7 @@ export interface ComponentDetail {
   status: string;
   progress: number;
   directProgress: number;
+  childCount: number;
   startDate: string | null;
   endDate: string | null;
   teamCount: number;

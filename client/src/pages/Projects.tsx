@@ -2,15 +2,25 @@ import { useMemo, useState, type CSSProperties } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApi } from '../lib/useApi.js';
 import { api, ApiError } from '../lib/api.js';
-import { Button, Card, EmptyState, ErrorState, ProgressBar, Spinner, StatusPill } from '../components/ui.js';
-import { IconSearch } from '../components/icons.js';
+import { useAuth } from '../lib/auth.js';
+import { useT } from '../lib/i18n.js';
+import { Button, Card, EmptyState, ErrorState, ListSkeleton, ProgressBar, StatusPill } from '../components/ui.js';
+import { IconFolder, IconSearch } from '../components/icons.js';
 import { money, roleLabel, titleCase } from '../lib/format.js';
 import type { Project } from '../lib/types.js';
 import { NewProjectModal } from '../components/NewProjectModal.js';
 
+/** Landing path for opening a project, honoring the user's default-page setting. */
+export function projectLandingPath(id: string, defaultPage: string | undefined): string {
+  return defaultPage === 'breakdown' ? `/projects/${id}/breakdown` : `/projects/${id}`;
+}
+
 export function ProjectsPage() {
   const { data, loading, error, reload } = useApi<{ projects: Project[] }>('/projects');
+  const { settings } = useAuth();
+  const t = useT();
   const navigate = useNavigate();
+  const openProject = (id: string) => navigate(projectLandingPath(id, settings?.default_project_page));
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('all');
   const [role, setRole] = useState('all');
@@ -37,10 +47,10 @@ export function ProjectsPage() {
     <div>
       <div className="row-between wrap" style={{ marginBottom: 20 }}>
         <div>
-          <h1>My Projects</h1>
-          <p className="muted" style={{ fontSize: '0.9rem', marginTop: 4 }}>View and manage your construction projects.</p>
+          <h1>{t('projects.title')}</h1>
+          <p className="muted" style={{ fontSize: '0.9rem', marginTop: 4 }}>{t('projects.subtitle')}</p>
         </div>
-        <Button onClick={() => setShowNew(true)}>+ New Project</Button>
+        <Button onClick={() => setShowNew(true)}>{t('projects.new')}</Button>
       </div>
 
       <Card padding="var(--sp-4)" style={{ marginBottom: 20 }}>
@@ -72,11 +82,12 @@ export function ProjectsPage() {
         </div>
       </Card>
 
-      {loading && <Spinner label="Loading projects…" />}
+      {loading && <ListSkeleton rows={4} />}
       {error && <ErrorState message={error} onRetry={reload} />}
       {!loading && !error && projects.length === 0 && (
         <Card>
           <EmptyState
+            icon={<IconFolder size={24} />}
             title="No projects yet"
             hint="Create your first project to begin breaking down and tracking your build."
             action={<Button onClick={() => setShowNew(true)}>+ New Project</Button>}
@@ -86,7 +97,7 @@ export function ProjectsPage() {
 
       <div className="stack" style={{ gap: 12 }}>
         {projects.map((p, i) => (
-          <Card key={p.id} interactive className="bt-stagger" style={{ ['--i' as string]: i } as CSSProperties} onClick={() => navigate(`/projects/${p.id}`)}>
+          <Card key={p.id} interactive className="bt-stagger" style={{ ['--i' as string]: i } as CSSProperties} onClick={() => openProject(p.id)}>
             <div className="row-between wrap" style={{ gap: 16 }}>
               <div style={{ minWidth: 220, flex: 1 }}>
                 <div className="row" style={{ gap: 10 }}>
@@ -112,7 +123,7 @@ export function ProjectsPage() {
       {showNew && (
         <NewProjectModal
           onClose={() => setShowNew(false)}
-          onCreated={(id) => { setShowNew(false); navigate(`/projects/${id}`); }}
+          onCreated={(id) => { setShowNew(false); openProject(id); }}
         />
       )}
     </div>

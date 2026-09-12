@@ -114,6 +114,7 @@ componentsRouter.get('/:componentId', requireAuth, requirePermission('view_proje
 
   const teamRow = await one<{ n: number }>('SELECT COUNT(*) AS n FROM personnel_assignments WHERE component_id = ?', [c.id]);
   const matRow = await one<{ n: number }>('SELECT COUNT(*) AS n FROM materials WHERE component_id = ?', [c.id]);
+  const childRow = await one<{ n: number }>('SELECT COUNT(*) AS n FROM project_components WHERE parent_id = ?', [c.id]);
 
   res.json({
     component: {
@@ -125,6 +126,7 @@ componentsRouter.get('/:componentId', requireAuth, requirePermission('view_proje
       status: c.status,
       progress: node ? Math.round(await computeProgress(node, method)) : c.progress,
       directProgress: c.progress,
+      childCount: childRow?.n ?? 0,
       startDate: c.start_date,
       endDate: c.end_date,
       teamCount: teamRow?.n ?? 0,

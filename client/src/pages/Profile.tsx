@@ -1,10 +1,12 @@
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../lib/auth.js';
+import { useT } from '../lib/i18n.js';
 import { api, ApiError } from '../lib/api.js';
 import { Avatar, Button, Card } from '../components/ui.js';
 import { IconCamera } from '../components/icons.js';
 import { dateTime } from '../lib/format.js';
+import type { Settings } from '../lib/types.js';
 
 /** Reads an image file and downscales it to a square data URL (keeps payload small). */
 function fileToResizedDataUrl(file: File, max = 256): Promise<string> {
@@ -33,7 +35,8 @@ function fileToResizedDataUrl(file: File, max = 256): Promise<string> {
 }
 
 export function ProfilePage() {
-  const { user, refresh } = useAuth();
+  const { user, settings, refresh } = useAuth();
+  const t = useT();
   const navigate = useNavigate();
   const fileRef = useRef<HTMLInputElement>(null);
   const [displayName, setDisplayName] = useState(user?.displayName ?? '');
@@ -80,7 +83,7 @@ export function ProfilePage() {
 
   return (
     <div style={{ maxWidth: 620 }}>
-      <h1 style={{ marginBottom: 20 }}>Profile</h1>
+      <h1 style={{ marginBottom: 20 }}>{t('profile.title')}</h1>
 
       <Card style={{ marginBottom: 16 }}>
         {/* Photo */}
@@ -89,9 +92,9 @@ export function ProfilePage() {
             <Avatar name={displayName || user?.displayName || '?'} src={preview} size={72} />
             <button
               onClick={() => fileRef.current?.click()}
-              aria-label="Change photo"
+              aria-label={t('profile.changephoto')}
               className="bt-btn"
-              style={{ position: 'absolute', right: -4, bottom: -4, width: 30, height: 30, borderRadius: '50%', background: 'var(--accent)', color: '#fff', border: '2px solid var(--surface)', display: 'grid', placeItems: 'center', cursor: 'pointer' }}
+              style={{ position: 'absolute', right: -4, bottom: -4, width: 30, height: 30, borderRadius: '50%', background: 'var(--accent)', color: 'var(--on-accent)', border: '2px solid var(--surface)', display: 'grid', placeItems: 'center', cursor: 'pointer' }}
             >
               <IconCamera size={15} />
             </button>
@@ -101,33 +104,91 @@ export function ProfilePage() {
             <div style={{ fontWeight: 600, fontSize: '1.05rem' }}>{user?.displayName}</div>
             <div className="muted" style={{ fontSize: '0.85rem' }}>{user?.email}</div>
             <div className="row" style={{ gap: 8, marginTop: 10 }}>
-              <Button size="sm" variant="secondary" onClick={() => fileRef.current?.click()}>Upload photo</Button>
-              {preview && <Button size="sm" variant="ghost" onClick={removePhoto}>Remove</Button>}
+              <Button size="sm" variant="secondary" onClick={() => fileRef.current?.click()}>{t('profile.uploadphoto')}</Button>
+              {preview && <Button size="sm" variant="ghost" onClick={removePhoto}>{t('profile.remove')}</Button>}
             </div>
           </div>
         </div>
 
         {/* Identity */}
         <dl style={{ margin: '0 0 20px', display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '10px 20px', fontSize: '0.9rem' }}>
-          <dt className="muted">User ID</dt><dd style={{ margin: 0 }}><span className="mono">{user?.id}</span> <span className="muted">· permanent</span></dd>
-          <dt className="muted">Joined</dt><dd style={{ margin: 0 }}>{user ? dateTime(user.createdAt) : ''}</dd>
+          <dt className="muted">{t('profile.userid')}</dt><dd style={{ margin: 0 }}><span className="mono">{user?.id}</span> <span className="muted">· {t('profile.permanent')}</span></dd>
+          <dt className="muted">{t('profile.joined')}</dt><dd style={{ margin: 0 }}>{user ? dateTime(user.createdAt) : ''}</dd>
         </dl>
 
         <div className="field">
-          <label htmlFor="dn">Display name</label>
+          <label htmlFor="dn">{t('profile.displayname')}</label>
           <input id="dn" value={displayName} onChange={(e) => setDisplayName(e.target.value)} />
         </div>
 
         {msg && <p style={{ color: 'var(--success)', fontSize: '0.85rem', marginBottom: 12 }}>{msg}</p>}
         {err && <p style={{ color: 'var(--error)', fontSize: '0.85rem', marginBottom: 12 }}>{err}</p>}
-        <Button onClick={save} disabled={busy}>{busy ? 'Saving…' : 'Save changes'}</Button>
+        <Button onClick={save} disabled={busy}>{busy ? t('common.saving') : t('profile.save')}</Button>
       </Card>
 
+      <PrivacyPreview
+        settings={settings}
+        name={displayName || user?.displayName || '?'}
+        avatar={preview}
+        joined={user ? dateTime(user.createdAt) : ''}
+        t={t}
+      />
+
       <Card>
-        <h3 style={{ marginBottom: 6 }}>More customization</h3>
-        <p className="muted" style={{ fontSize: '0.88rem', marginBottom: 14 }}>Theme, accent, density, accessibility, privacy, and language live in Settings.</p>
-        <Button variant="secondary" size="sm" onClick={() => navigate('/settings')}>Open Settings</Button>
+        <h3 style={{ marginBottom: 6 }}>{t('profile.morecustomization')}</h3>
+        <p className="muted" style={{ fontSize: '0.88rem', marginBottom: 14 }}>{t('profile.morecustomization.hint')}</p>
+        <Button variant="secondary" size="sm" onClick={() => navigate('/settings')}>{t('profile.opensettings')}</Button>
       </Card>
     </div>
+  );
+}
+
+/** Live preview of what other users would see, driven by the Privacy settings.
+ *  This makes the visibility/online/last-active toggles produce a real,
+ *  immediate, on-screen effect. */
+function PrivacyPreview({
+  settings, name, avatar, joined, t,
+}: {
+  settings: Settings | null;
+  name: string;
+  avatar: string | null;
+  joined: string;
+  t: (k: string) => string;
+}) {
+  const visibility = settings?.profile_visibility ?? 'members';
+  const isPrivate = visibility === 'private';
+  const showOnline = !!settings?.show_online;
+  const showLast = !!settings?.show_last_active;
+  const visLabel = t(`settings.visibility.${visibility === 'public' ? 'public' : isPrivate ? 'private' : 'members'}`);
+
+  return (
+    <Card style={{ marginBottom: 16 }}>
+      <h3 style={{ marginBottom: 6 }}>{t('profile.preview.title')}</h3>
+      <p className="muted" style={{ fontSize: '0.82rem', marginBottom: 14 }}>
+        {t('profile.preview.visibleto')}: <strong style={{ color: 'var(--text-secondary)' }}>{visLabel}</strong>
+      </p>
+
+      {isPrivate ? (
+        <p className="muted" style={{ fontSize: '0.88rem' }}>{t('profile.preview.privatenote')}</p>
+      ) : (
+        <div className="row" style={{ gap: 14, opacity: 1 }}>
+          <Avatar name={name} src={avatar} size={48} />
+          <div className="stack" style={{ gap: 4 }}>
+            <div style={{ fontWeight: 600 }}>{name}</div>
+            <div className="row" style={{ gap: 8, fontSize: '0.82rem' }}>
+              <span className="row" style={{ gap: 6 }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', background: showOnline ? 'var(--success)' : 'var(--text-muted)' }} />
+                <span className={showOnline ? 'secondary' : 'muted'}>
+                  {showOnline ? t('profile.preview.online') : t('profile.preview.onlinehidden')}
+                </span>
+              </span>
+            </div>
+            <div className="muted" style={{ fontSize: '0.8rem' }}>
+              {showLast ? `${t('profile.preview.lastactive')} · ${joined}` : t('profile.preview.lastactivehidden')}
+            </div>
+          </div>
+        </div>
+      )}
+    </Card>
   );
 }

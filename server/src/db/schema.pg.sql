@@ -42,8 +42,9 @@ CREATE TABLE IF NOT EXISTS password_resets (
 CREATE TABLE IF NOT EXISTS user_settings (
   user_id              text PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
   theme                text NOT NULL DEFAULT 'light',
-  accent               text NOT NULL DEFAULT 'blue',
-  font                 text NOT NULL DEFAULT 'Sora',
+  dark_theme           text NOT NULL DEFAULT 'warm',
+  accent               text NOT NULL DEFAULT 'terracotta',
+  font                 text NOT NULL DEFAULT 'IBM Plex Sans',
   density              text NOT NULL DEFAULT 'comfortable',
   sidebar_behavior     text NOT NULL DEFAULT 'expanded',
   default_project_page text NOT NULL DEFAULT 'overview',
@@ -59,6 +60,8 @@ CREATE TABLE IF NOT EXISTS user_settings (
   region               text NOT NULL DEFAULT 'PH',
   updated_at           text NOT NULL
 );
+-- Backfill for databases created before dark_theme existed (idempotent).
+ALTER TABLE user_settings ADD COLUMN IF NOT EXISTS dark_theme text NOT NULL DEFAULT 'warm';
 
 -- Projects, membership, invitations
 CREATE TABLE IF NOT EXISTS projects (
